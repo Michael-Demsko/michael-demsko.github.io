@@ -35,25 +35,42 @@ $("#choose-root").addEventListener("click", async () => {
 
 $("#photo-image-button").addEventListener("click", async () => {
   if (!ensureDesktopApp()) return;
-  const [imagePath] = await adminApi.chooseImages({
-    title: "Choose photo of the day JPG",
-    photoOnly: true,
-  });
-  if (!imagePath) return;
-  state.photoImagePath = imagePath;
-  $("#photo-image-label").textContent = imagePath;
+  setStatus("#photo-status", "Opening image picker...");
+
+  try {
+    const [imagePath] = await adminApi.chooseImages({
+      title: "Choose photo of the day JPG",
+      photoOnly: true,
+    });
+    if (!imagePath) {
+      setStatus("#photo-status", "");
+      return;
+    }
+    state.photoImagePath = imagePath;
+    $("#photo-image-label").textContent = imagePath;
+    setStatus("#photo-status", "Image selected.");
+  } catch (error) {
+    setStatus("#photo-status", error.message);
+  }
 });
 
 $("#post-images-button").addEventListener("click", async () => {
   if (!ensureDesktopApp()) return;
-  const imagePaths = await adminApi.chooseImages({
-    title: "Choose post images",
-    multiple: true,
-  });
-  state.postImagePaths = imagePaths;
-  $("#post-image-label").textContent = imagePaths.length
-    ? `${imagePaths.length} image${imagePaths.length === 1 ? "" : "s"} selected`
-    : "No images selected";
+  setStatus("#post-status", "Opening image picker...");
+
+  try {
+    const imagePaths = await adminApi.chooseImages({
+      title: "Choose post images",
+      multiple: true,
+    });
+    state.postImagePaths = imagePaths;
+    $("#post-image-label").textContent = imagePaths.length
+      ? `${imagePaths.length} image${imagePaths.length === 1 ? "" : "s"} selected`
+      : "No images selected";
+    setStatus("#post-status", imagePaths.length ? "Images selected." : "");
+  } catch (error) {
+    setStatus("#post-status", error.message);
+  }
 });
 
 $("#photo-form").addEventListener("submit", async (event) => {
@@ -130,14 +147,24 @@ $("#photo-list").addEventListener("click", async (event) => {
 
   if (button.dataset.action === "replace") {
     if (!ensureDesktopApp()) return;
-    const [imagePath] = await adminApi.chooseImages({
-      title: "Choose replacement JPG",
-      photoOnly: true,
-    });
-    if (!imagePath) return;
-    state.replacementImagePath = imagePath;
-    const item = button.closest(".photo-item");
-    item.querySelector(".replace-label").textContent = imagePath;
+    setStatus("#photo-status", "Opening replacement image picker...");
+
+    try {
+      const [imagePath] = await adminApi.chooseImages({
+        title: "Choose replacement JPG",
+        photoOnly: true,
+      });
+      if (!imagePath) {
+        setStatus("#photo-status", "");
+        return;
+      }
+      state.replacementImagePath = imagePath;
+      const item = button.closest(".photo-item");
+      item.querySelector(".replace-label").textContent = imagePath;
+      setStatus("#photo-status", "Replacement image selected.");
+    } catch (error) {
+      setStatus("#photo-status", error.message);
+    }
   }
 
   if (button.dataset.action === "save") {
@@ -172,7 +199,14 @@ async function loadAll() {
 }
 
 function renderCategories(categories) {
+  const placeholder = document.createElement("option");
+  placeholder.value = "";
+  placeholder.textContent = categories.length ? "Choose a tag" : "No tags found";
+  placeholder.disabled = true;
+  placeholder.selected = true;
+
   $("#post-category").replaceChildren(
+    placeholder,
     ...categories.map((category) => {
       const option = document.createElement("option");
       option.value = category.id;
@@ -180,6 +214,10 @@ function renderCategories(categories) {
       return option;
     }),
   );
+
+  if (!categories.length) {
+    setStatus("#post-status", "No tags found. Check that the app is using the repo's website folder.");
+  }
 }
 
 function renderPhotos(photos) {

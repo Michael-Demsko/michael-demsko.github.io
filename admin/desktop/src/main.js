@@ -68,9 +68,9 @@ ipcMain.handle("settings:chooseWebsiteRoot", async () => {
     };
   }
 
-  const websiteRoot = result.filePaths[0];
-  if (!(await isWebsiteRoot(websiteRoot))) {
-    throw new HttpError("That folder does not look like the website folder.");
+  const websiteRoot = await resolveWebsiteRoot(result.filePaths[0]);
+  if (!websiteRoot) {
+    throw new HttpError("Choose the repo folder or its inner website folder.");
   }
 
   await writeSettings({ websiteRoot });
@@ -238,15 +238,17 @@ async function getWebsiteRoot() {
 
   try {
     const settings = JSON.parse(await fs.readFile(settingsPath(), "utf8"));
-    if (settings.websiteRoot) candidates.push(settings.websiteRoot);
+    if (settings.websiteRoot) candidates.push(await resolveWebsiteRoot(settings.websiteRoot));
   } catch {
     // No saved settings yet.
   }
 
   candidates.push(
     defaultWebsiteRoot,
-    path.resolve(process.resourcesPath || appRoot, "../../../../../../website"),
+    await findWebsiteRootNear(process.resourcesPath || appRoot),
     path.resolve(app.getAppPath(), "../../../website"),
+    await findWebsiteRootNear(app.getAppPath()),
+    await findWebsiteRootNear(process.cwd()),
   );
 
   for (const candidate of uniqueValues(candidates)) {
@@ -262,6 +264,8 @@ async function writeSettings(settings) {
 }
 
 async function isWebsiteRoot(websiteRoot) {
+  if (!websiteRoot) return false;
+
   try {
     await fs.access(path.join(websiteRoot, "src/data/photos.json"));
     await fs.access(path.join(websiteRoot, "src/data/posts.json"));
@@ -270,6 +274,32 @@ async function isWebsiteRoot(websiteRoot) {
   } catch {
     return false;
   }
+}
+
+async function resolveWebsiteRoot(selectedPath) {
+  if (!selectedPath) return "";
+  if (await isWebsiteRoot(selectedPath)) return selectedPath;
+
+  const nestedWebsite = path.join(selectedPath, "website");
+  if (await isWebsiteRoot(nestedWebsite)) return nestedWebsite;
+
+  return "";
+}
+
+async function findWebsiteRootNear(startPath) {
+  if (!startPath) return "";
+
+  let current = path.resolve(startPath);
+  for (let depth = 0; depth < 10; depth += 1) {
+    const candidate = path.join(current, "website");
+    if (await isWebsiteRoot(candidate)) return candidate;
+
+    const parent = path.dirname(current);
+    if (parent === current) break;
+    current = parent;
+  }
+
+  return "";
 }
 
 async function websitePath(...parts) {
