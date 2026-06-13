@@ -234,12 +234,26 @@ ipcMain.handle("posts:create", async (_event, payload) => {
 });
 
 async function getWebsiteRoot() {
+  const candidates = [];
+
   try {
     const settings = JSON.parse(await fs.readFile(settingsPath(), "utf8"));
-    return settings.websiteRoot || defaultWebsiteRoot;
+    if (settings.websiteRoot) candidates.push(settings.websiteRoot);
   } catch {
-    return defaultWebsiteRoot;
+    // No saved settings yet.
   }
+
+  candidates.push(
+    defaultWebsiteRoot,
+    path.resolve(process.resourcesPath || appRoot, "../../../../../../website"),
+    path.resolve(app.getAppPath(), "../../../website"),
+  );
+
+  for (const candidate of uniqueValues(candidates)) {
+    if (await isWebsiteRoot(candidate)) return candidate;
+  }
+
+  return candidates[0] || defaultWebsiteRoot;
 }
 
 async function writeSettings(settings) {
@@ -389,6 +403,10 @@ function splitTags(value) {
     .split(",")
     .map((tag) => tag.trim())
     .filter(Boolean);
+}
+
+function uniqueValues(values) {
+  return [...new Set(values.filter(Boolean))];
 }
 
 async function runWebsiteBuild() {

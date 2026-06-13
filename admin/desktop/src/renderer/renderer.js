@@ -6,6 +6,10 @@ const state = {
   posts: [],
 };
 
+const adminApi = window.siteAdmin;
+const desktopOnlyMessage =
+  "Open the packaged desktop app to manage the website. The browser preview cannot read or write local website files.";
+
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 
@@ -20,8 +24,9 @@ $$(".module-tab").forEach((tab) => {
 });
 
 $("#choose-root").addEventListener("click", async () => {
+  if (!ensureDesktopApp()) return;
   try {
-    await window.siteAdmin.chooseWebsiteRoot();
+    await adminApi.chooseWebsiteRoot();
     await loadAll();
   } catch (error) {
     setRootStatus(error.message, false);
@@ -29,7 +34,8 @@ $("#choose-root").addEventListener("click", async () => {
 });
 
 $("#photo-image-button").addEventListener("click", async () => {
-  const [imagePath] = await window.siteAdmin.chooseImages({
+  if (!ensureDesktopApp()) return;
+  const [imagePath] = await adminApi.chooseImages({
     title: "Choose photo of the day JPG",
     photoOnly: true,
   });
@@ -39,7 +45,8 @@ $("#photo-image-button").addEventListener("click", async () => {
 });
 
 $("#post-images-button").addEventListener("click", async () => {
-  const imagePaths = await window.siteAdmin.chooseImages({
+  if (!ensureDesktopApp()) return;
+  const imagePaths = await adminApi.chooseImages({
     title: "Choose post images",
     multiple: true,
   });
@@ -51,6 +58,7 @@ $("#post-images-button").addEventListener("click", async () => {
 
 $("#photo-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!ensureDesktopApp()) return;
   setStatus("#photo-status", "Updating...");
 
   try {
@@ -60,7 +68,7 @@ $("#photo-form").addEventListener("submit", async (event) => {
       imagePath: state.photoImagePath,
       build: $("#photo-build").checked,
     };
-    const result = await window.siteAdmin.createPhoto(payload);
+    const result = await adminApi.createPhoto(payload);
     state.photoImagePath = "";
     $("#photo-form").reset();
     $("#photo-date").valueAsDate = new Date();
@@ -74,6 +82,7 @@ $("#photo-form").addEventListener("submit", async (event) => {
 
 $("#post-form").addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!ensureDesktopApp()) return;
   setStatus("#post-status", "Publishing...");
 
   try {
@@ -88,7 +97,7 @@ $("#post-form").addEventListener("submit", async (event) => {
       imagePaths: state.postImagePaths,
       build: $("#post-build").checked,
     };
-    const result = await window.siteAdmin.createPost(payload);
+    const result = await adminApi.createPost(payload);
     state.postImagePaths = [];
     $("#post-form").reset();
     $("#post-date").valueAsDate = new Date();
@@ -120,7 +129,8 @@ $("#photo-list").addEventListener("click", async (event) => {
   }
 
   if (button.dataset.action === "replace") {
-    const [imagePath] = await window.siteAdmin.chooseImages({
+    if (!ensureDesktopApp()) return;
+    const [imagePath] = await adminApi.chooseImages({
       title: "Choose replacement JPG",
       photoOnly: true,
     });
@@ -145,13 +155,15 @@ $("#preview-dialog").addEventListener("click", (event) => {
 });
 
 async function loadAll() {
-  const settings = await window.siteAdmin.getSettings();
+  if (!ensureDesktopApp()) return;
+
+  const settings = await adminApi.getSettings();
   setRootStatus(settings.valid ? settings.websiteRoot : `${settings.websiteRoot} is not valid`, settings.valid);
 
   const [photos, posts, categories] = await Promise.all([
-    window.siteAdmin.listPhotos(),
-    window.siteAdmin.listPosts(),
-    window.siteAdmin.listCategories(),
+    adminApi.listPhotos(),
+    adminApi.listPosts(),
+    adminApi.listCategories(),
   ]);
 
   renderPhotos(photos);
@@ -232,7 +244,7 @@ async function savePhotoEdit(id, item) {
   setStatus("#photo-status", "Saving edit...");
 
   try {
-    const result = await window.siteAdmin.updatePhoto({
+    const result = await adminApi.updatePhoto({
       id,
       title: form.elements.title.value,
       date: form.elements.date.value,
@@ -252,7 +264,7 @@ async function deletePhoto(photo) {
   setStatus("#photo-status", "Deleting...");
 
   try {
-    const result = await window.siteAdmin.deletePhoto({
+    const result = await adminApi.deletePhoto({
       id: photo.id,
       build: $("#photo-build").checked,
     });
@@ -307,6 +319,14 @@ function setRootStatus(message, valid) {
 
 function setStatus(selector, message) {
   $(selector).textContent = message;
+}
+
+function ensureDesktopApp() {
+  if (adminApi) return true;
+  setRootStatus(desktopOnlyMessage, false);
+  setStatus("#photo-status", desktopOnlyMessage);
+  setStatus("#post-status", desktopOnlyMessage);
+  return false;
 }
 
 function escapeHtml(value) {
