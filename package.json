@@ -1,0 +1,17 @@
+{
+  "name": "michael-demsko.github.io-workspace",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "website",
+    "admin/desktop"
+  ],
+  "scripts": {
+    "dev:website": "npm --workspace website run dev",
+    "build": "npm --workspace website run build",
+    "preview": "npm --workspace website run preview",
+    "admin:desktop": "npm --workspace admin/desktop run start",
+    "admin:package": "npm --workspace admin/desktop run package"
+  }
+}

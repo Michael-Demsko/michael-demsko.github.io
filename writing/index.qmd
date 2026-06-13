@@ -1,8 +1,0 @@
----
-title: "writing"
-listing:
-  sort: "date desc"
-  type: default
-  fields: [date, title, author]
-css: ../../css/syles.css
----

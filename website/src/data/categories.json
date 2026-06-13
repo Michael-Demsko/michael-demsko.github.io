@@ -1,0 +1,44 @@
+[
+  {
+    "id": "ideas",
+    "label": "ideas",
+    "kicker": "notes, prompts, and loose theory",
+    "color": "#e99289",
+    "ink": "#6e1e1e"
+  },
+  {
+    "id": "music",
+    "label": "music",
+    "kicker": "playlists, listening, and sound",
+    "color": "#e29c7c",
+    "ink": "#73321e"
+  },
+  {
+    "id": "writing",
+    "label": "writing",
+    "kicker": "essays, fragments, and published pieces",
+    "color": "#f3ce6b",
+    "ink": "#824614"
+  },
+  {
+    "id": "data",
+    "label": "data",
+    "kicker": "analysis, models, and experiments",
+    "color": "#99c56c",
+    "ink": "#285023"
+  },
+  {
+    "id": "design",
+    "label": "design",
+    "kicker": "interfaces, systems, and visual work",
+    "color": "#96c3f3",
+    "ink": "#284178"
+  },
+  {
+    "id": "photo",
+    "label": "photo",
+    "kicker": "film, edits, and daily images",
+    "color": "#bc9af3",
+    "ink": "#462873"
+  }
+]

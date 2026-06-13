@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Michael Demsko Site Admin</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <nav class="module-nav">
+      <button class="module-tab active" type="button" data-module-target="photo-module">Photo of the day</button>
+      <button class="module-tab" type="button" data-module-target="post-module">Create post</button>
+      <button id="choose-root" class="root-button" type="button">Choose website folder</button>
+    </nav>
+
+    <div class="root-status" id="root-status"></div>
+
+    <main class="shell">
+      <section id="photo-module" class="module-view active">
+        <section class="panel">
+          <p class="eyebrow">photo module</p>
+          <h1>Update photo of the day</h1>
+
+          <form id="photo-form">
+            <button id="photo-image-button" class="drop-zone" type="button">Choose a JPG image</button>
+            <p id="photo-image-label" class="file-label">No image selected</p>
+
+            <label>
+              <span>Caption</span>
+              <input id="photo-title" name="title" type="text" autocomplete="off" required />
+            </label>
+
+            <label>
+              <span>Date</span>
+              <input id="photo-date" name="date" type="date" required />
+            </label>
+
+            <label class="checkbox">
+              <input id="photo-build" name="build" type="checkbox" checked />
+              <span>Run site build after update</span>
+            </label>
+
+            <button type="submit">Update</button>
+          </form>
+
+          <p id="photo-status" role="status"></p>
+        </section>
+
+        <section class="panel list-panel">
+          <p class="eyebrow">current manifest</p>
+          <div id="photo-list" class="photo-list"></div>
+        </section>
+      </section>
+
+      <section id="post-module" class="module-view">
+        <section class="panel">
+          <p class="eyebrow">post module</p>
+          <h1>Create post</h1>
+
+          <form id="post-form">
+            <label>
+              <span>Title</span>
+              <input id="post-title" type="text" autocomplete="off" required />
+            </label>
+
+            <label>
+              <span>Date</span>
+              <input id="post-date" type="date" required />
+            </label>
+
+            <label>
+              <span>Tag</span>
+              <select id="post-category" required></select>
+            </label>
+
+            <label>
+              <span>Summary</span>
+              <input id="post-summary" type="text" autocomplete="off" />
+            </label>
+
+            <label>
+              <span>Additional tags</span>
+              <input id="post-tags" type="text" autocomplete="off" placeholder="comma, separated" />
+            </label>
+
+            <label>
+              <span>Plain text</span>
+              <textarea id="post-text" rows="12"></textarea>
+            </label>
+
+            <button id="post-images-button" class="drop-zone compact" type="button">Choose post images</button>
+            <p id="post-image-label" class="file-label">No images selected</p>
+
+            <label>
+              <span>Iframe or embed HTML</span>
+              <textarea id="post-iframe" rows="5"></textarea>
+            </label>
+
+            <label class="checkbox">
+              <input id="post-build" type="checkbox" checked />
+              <span>Run site build after publish</span>
+            </label>
+
+            <button type="submit">Publish post</button>
+          </form>
+
+          <p id="post-status" role="status"></p>
+        </section>
+
+        <section class="panel list-panel">
+          <p class="eyebrow">recent posts</p>
+          <div id="post-list" class="post-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="preview-dialog" class="preview-dialog">
+      <button id="preview-close" class="preview-close" type="button">Close</button>
+      <img id="preview-image" src="" alt="" />
+      <div>
+        <h2 id="preview-title"></h2>
+        <p id="preview-date"></p>
+      </div>
+    </dialog>
+
+    <script type="module" src="./renderer.js"></script>
+  </body>
+</html>

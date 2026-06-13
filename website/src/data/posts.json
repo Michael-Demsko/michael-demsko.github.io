@@ -1,0 +1,184 @@
+[
+  {
+    "slug": "write-about-life-or-die",
+    "title": "Write About Life, Or Die!",
+    "date": "2024-10-25",
+    "category": "writing",
+    "tags": [
+      "Creativity",
+      "Product Design",
+      "Innovation"
+    ],
+    "summary": "A writing entry linked from Substack.",
+    "embedHtml": "<div class=\"substack-post-embed\"><p lang=\"en\">RAM by Michael Demsko Jr</p><a data-post-link href=\"https://michaeldemskojr.substack.com/p/ram\">Read on Substack</a></div><script async src=\"https://substack.com/embedjs/embed.js\" charset=\"utf-8\"></script>",
+    "body": []
+  },
+  {
+    "slug": "music-is-fun-music-is-cool",
+    "title": "Music is Fun, Music is Cool",
+    "date": "2024-09-12",
+    "category": "music",
+    "tags": [
+      "Playlist",
+      "Listening"
+    ],
+    "summary": "A Spotify playlist entry.",
+    "embedHtml": "<iframe title=\"Spotify playlist\" style=\"border-radius:12px\" src=\"https://open.spotify.com/embed/playlist/6ODx6QkeE2b2UvyfMNhNyx?utm_source=generator\" width=\"100%\" height=\"352\" frameborder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\" loading=\"lazy\"></iframe>",
+    "body": []
+  },
+  {
+    "slug": "exploring-creative-thinking-in-product-design",
+    "title": "Exploring Creative Thinking in Product Design",
+    "date": "2024-09-11",
+    "category": "ideas",
+    "tags": [
+      "Creativity",
+      "Product Design",
+      "Innovation"
+    ],
+    "summary": "A design-thinking reference with a video embed.",
+    "embedHtml": "<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/WOkBzQbkvBA?si=qgpNNA9Xs-GHI2C1\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" referrerpolicy=\"strict-origin-when-cross-origin\" allowfullscreen></iframe>",
+    "body": []
+  },
+  {
+    "slug": "breaking-data-cures-all-disease",
+    "title": "Breaking: Data Cures All Disease",
+    "date": "2024-09-11",
+    "category": "data",
+    "tags": [
+      "Creativity",
+      "Product Design",
+      "Innovation"
+    ],
+    "summary": "A placeholder data essay from the original site.",
+    "body": [
+      {
+        "type": "heading",
+        "text": "Introduction"
+      },
+      {
+        "type": "paragraph",
+        "text": "In today's rapidly evolving world, creativity is a vital component of successful product design. Whether you're designing a physical product or a digital experience, understanding how creative thinking can shape user interaction is crucial."
+      },
+      {
+        "type": "paragraph",
+        "text": "This note explores practical ways to sharpen a creative process and turn rough ideas into material you can actually test."
+      },
+      {
+        "type": "heading",
+        "text": "Key Strategies"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Brainstorm freely before narrowing toward a direction.",
+          "Map adjacent ideas to find useful collisions.",
+          "Reverse the problem to expose assumptions.",
+          "Prototype early enough that the work can still surprise you."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "The Role of Empathy"
+      },
+      {
+        "type": "paragraph",
+        "text": "Creative thinking in product design is strongest when it stays close to the person on the other side of the experience."
+      }
+    ]
+  },
+  {
+    "slug": "designers-have-symmetrical-sex",
+    "title": "Designers Have Symmetrical Sex",
+    "date": "2024-09-11",
+    "category": "design",
+    "tags": [
+      "Creativity",
+      "Product Design",
+      "Innovation"
+    ],
+    "summary": "A placeholder design essay from the original site.",
+    "body": [
+      {
+        "type": "heading",
+        "text": "Introduction"
+      },
+      {
+        "type": "paragraph",
+        "text": "In today's rapidly evolving world, creativity is a vital component of successful product design. Whether you're designing a physical product or a digital experience, understanding how creative thinking can shape user interaction is crucial."
+      },
+      {
+        "type": "paragraph",
+        "text": "This note explores practical ways to sharpen a creative process and turn rough ideas into material you can actually test."
+      },
+      {
+        "type": "heading",
+        "text": "Key Strategies"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Brainstorm freely before narrowing toward a direction.",
+          "Map adjacent ideas to find useful collisions.",
+          "Reverse the problem to expose assumptions.",
+          "Prototype early enough that the work can still surprise you."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "The Role of Empathy"
+      },
+      {
+        "type": "paragraph",
+        "text": "Creative thinking in product design is strongest when it stays close to the person on the other side of the experience."
+      }
+    ]
+  },
+  {
+    "slug": "film-edited-in-the-iphone-photos-app",
+    "title": "Film Edited in The iPhone Photos App",
+    "date": "2024-09-11",
+    "category": "photo",
+    "tags": [
+      "Film",
+      "Photography",
+      "Mobile Editing"
+    ],
+    "summary": "A photo process note from the original site.",
+    "body": [
+      {
+        "type": "heading",
+        "text": "Introduction"
+      },
+      {
+        "type": "paragraph",
+        "text": "In today's rapidly evolving world, creativity is a vital component of successful product design. Whether you're designing a physical product or a digital experience, understanding how creative thinking can shape user interaction is crucial."
+      },
+      {
+        "type": "paragraph",
+        "text": "This note explores practical ways to sharpen a creative process and turn rough ideas into material you can actually test."
+      },
+      {
+        "type": "heading",
+        "text": "Key Strategies"
+      },
+      {
+        "type": "list",
+        "items": [
+          "Brainstorm freely before narrowing toward a direction.",
+          "Map adjacent ideas to find useful collisions.",
+          "Reverse the problem to expose assumptions.",
+          "Prototype early enough that the work can still surprise you."
+        ]
+      },
+      {
+        "type": "heading",
+        "text": "The Role of Empathy"
+      },
+      {
+        "type": "paragraph",
+        "text": "Creative thinking in product design is strongest when it stays close to the person on the other side of the experience."
+      }
+    ]
+  }
+]
