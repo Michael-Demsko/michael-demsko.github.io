@@ -2,6 +2,8 @@
   "name": "michael-demsko-site-admin",
   "private": true,
   "version": "0.1.0",
+  "description": "Desktop publishing utility for the Michael Demsko website.",
+  "author": "Michael Demsko",
   "type": "module",
   "main": "src/main.js",
   "scripts": {
@@ -9,12 +11,15 @@
     "package": "electron-builder --mac"
   },
   "devDependencies": {
-    "electron": "^33.4.11",
+    "app-builder-bin": "^5.0.0-alpha.10",
+    "electron": "33.4.11",
     "electron-builder": "^25.1.8"
   },
   "build": {
     "appId": "com.michaeldemskojr.siteadmin",
     "productName": "Michael Demsko Site Admin",
+    "electronVersion": "33.4.11",
+    "npmRebuild": false,
     "files": [
       "src/**/*",
       "assets/**/*",
@@ -22,7 +27,10 @@
     ],
     "mac": {
       "category": "public.app-category.productivity",
-      "icon": "assets/icon.svg"
+      "icon": "assets/icon.icns",
+      "target": [
+        "dir"
+      ]
     }
   }
 }
