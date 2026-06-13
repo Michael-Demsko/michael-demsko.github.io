@@ -234,6 +234,39 @@ ipcMain.handle("posts:create", async (_event, payload) => {
   return { post, posts: nextPosts };
 });
 
+ipcMain.handle("site:publish", async () => {
+  const websiteRoot = await getWebsiteRoot();
+  if (!(await isWebsiteRoot(websiteRoot))) {
+    throw new HttpError("Choose a valid website folder before publishing.");
+  }
+
+  const repoRoot = path.dirname(websiteRoot);
+  await runGit(["status", "--porcelain"], repoRoot);
+
+  const statusBefore = await runGit(["status", "--porcelain"], repoRoot);
+  if (!statusBefore.trim()) {
+    return { published: false, message: "No local website changes to publish." };
+  }
+
+  await runGit(["add", "website", "docs"], repoRoot);
+
+  const staged = await runGit(["diff", "--cached", "--name-only"], repoRoot);
+  if (!staged.trim()) {
+    return { published: false, message: "No website or docs changes to publish." };
+  }
+
+  const timestamp = new Date().toISOString().slice(0, 16).replace("T", " ");
+  await runGit(["commit", "-m", `Publish site updates ${timestamp}`], repoRoot);
+  const pushOutput = await runGit(["push", "origin", "main"], repoRoot);
+  const commit = await runGit(["rev-parse", "--short", "HEAD"], repoRoot);
+
+  return {
+    published: true,
+    commit: commit.trim(),
+    message: pushOutput.trim() || `Published ${commit.trim()} to GitHub.`,
+  };
+});
+
 async function getWebsiteRoot() {
   const candidates = [];
 
@@ -449,6 +482,18 @@ async function runWebsiteBuild() {
         return;
       }
       resolve();
+    });
+  });
+}
+
+async function runGit(args, cwd) {
+  return new Promise((resolve, reject) => {
+    execFile("git", args, { cwd }, (error, stdout, stderr) => {
+      if (error) {
+        reject(new Error(`${stderr || stdout || error.message}`.trim()));
+        return;
+      }
+      resolve(stdout || stderr || "");
     });
   });
 }

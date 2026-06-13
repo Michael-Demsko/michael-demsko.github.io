@@ -42,7 +42,8 @@ button {
 
 button.secondary,
 .module-tab,
-.root-button {
+.root-button,
+.publish-button {
   color: var(--muted);
   background: #fff;
   border: 1px solid var(--line);
@@ -63,7 +64,12 @@ button.danger {
   margin-left: auto;
 }
 
-.root-status {
+.publish-button {
+  color: #253316;
+}
+
+.root-status,
+.publish-status {
   padding: 10px max(16px, calc((100% - 1100px) / 2));
   color: var(--muted);
   font-size: 0.86rem;
@@ -72,6 +78,19 @@ button.danger {
 }
 
 .root-status.invalid {
+  color: #a6423d;
+}
+
+.publish-status {
+  display: none;
+  color: #253316;
+}
+
+.publish-status.visible {
+  display: block;
+}
+
+.publish-status.invalid {
   color: #a6423d;
 }
 

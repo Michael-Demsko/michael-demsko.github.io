@@ -33,6 +33,18 @@ $("#choose-root").addEventListener("click", async () => {
   }
 });
 
+$("#publish-site").addEventListener("click", async () => {
+  if (!ensureDesktopApp()) return;
+  setPublishStatus("Publishing local website changes to GitHub...", true);
+
+  try {
+    const result = await adminApi.publishSite();
+    setPublishStatus(result.published ? `Published ${result.commit} to GitHub.` : result.message, true);
+  } catch (error) {
+    setPublishStatus(error.message, false);
+  }
+});
+
 $("#photo-image-button").addEventListener("click", async () => {
   if (!ensureDesktopApp()) return;
   setStatus("#photo-status", "Opening image picker...");
@@ -90,7 +102,7 @@ $("#photo-form").addEventListener("submit", async (event) => {
     $("#photo-form").reset();
     $("#photo-date").valueAsDate = new Date();
     $("#photo-image-label").textContent = "No image selected";
-    setStatus("#photo-status", `Saved "${result.photo.title}".`);
+    setStatus("#photo-status", `Saved "${result.photo.title}" locally. Click Publish to GitHub to update the live site.`);
     renderPhotos(result.photos);
   } catch (error) {
     setStatus("#photo-status", error.message);
@@ -119,7 +131,7 @@ $("#post-form").addEventListener("submit", async (event) => {
     $("#post-form").reset();
     $("#post-date").valueAsDate = new Date();
     $("#post-image-label").textContent = "No images selected";
-    setStatus("#post-status", `Published "${result.post.title}".`);
+    setStatus("#post-status", `Saved "${result.post.title}" locally. Click Publish to GitHub to update the live site.`);
     renderPosts(result.posts);
   } catch (error) {
     setStatus("#post-status", error.message);
@@ -359,6 +371,12 @@ function setRootStatus(message, valid) {
 
 function setStatus(selector, message) {
   $(selector).textContent = message;
+}
+
+function setPublishStatus(message, valid) {
+  $("#publish-status").textContent = message;
+  $("#publish-status").classList.add("visible");
+  $("#publish-status").classList.toggle("invalid", !valid);
 }
 
 function ensureDesktopApp() {

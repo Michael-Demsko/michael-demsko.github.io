@@ -12,4 +12,5 @@ contextBridge.exposeInMainWorld("siteAdmin", {
   listPosts: () => ipcRenderer.invoke("posts:list"),
   listCategories: () => ipcRenderer.invoke("categories:list"),
   createPost: (payload) => ipcRenderer.invoke("posts:create", payload),
+  publishSite: () => ipcRenderer.invoke("site:publish"),
 });
