@@ -184,6 +184,8 @@ $("#preview-dialog").addEventListener("click", (event) => {
 async function loadAll() {
   if (!ensureDesktopApp()) return;
 
+  setRootStatus("Desktop bridge connected. Locating website folder...", true);
+
   const settings = await adminApi.getSettings();
   setRootStatus(settings.valid ? settings.websiteRoot : `${settings.websiteRoot} is not valid`, settings.valid);
 
