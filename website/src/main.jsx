@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import categories from "./data/categories.json";
 import photos from "./data/photos.json";
@@ -181,6 +181,8 @@ function SiteFrame({ active, children, menuOpen, onMenuOpen, onMenuClose }) {
 
 function Home({ photo, posts, query, setQuery }) {
   const [activeCategories, setActiveCategories] = useState([]);
+  const [showScrollCue, setShowScrollCue] = useState(true);
+  const categoryFilterRef = useRef(null);
   const visiblePosts = activeCategories.length
     ? posts.filter((post) => activeCategories.includes(post.category))
     : posts;
@@ -191,18 +193,35 @@ function Home({ photo, posts, query, setQuery }) {
     );
   };
 
+  useEffect(() => {
+    const categoryFilter = categoryFilterRef.current;
+    if (!categoryFilter) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowScrollCue(!entry.isIntersecting),
+      { threshold: 0.16 },
+    );
+    observer.observe(categoryFilter);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <>
       <section className="photo-hero" aria-label="Photo of the day">
         <div className="photo-wrap">
-          <img src={photo.src} alt={photo.title} />
+          <div className="photo-frame">
+            <img src={photo.src} alt={photo.title} />
+          </div>
         </div>
         <div className="photo-caption">
           <span>photo of the day</span>
           <h1>{photo.title}</h1>
           <p>{formatDate(photo.date)}</p>
         </div>
-        <div className="scroll-cue" aria-hidden="true">⌄</div>
+        <div className={showScrollCue ? "scroll-cue" : "scroll-cue hidden"} aria-hidden="true">
+          ⌄
+        </div>
       </section>
 
       <section className="section-band">
@@ -217,16 +236,20 @@ function Home({ photo, posts, query, setQuery }) {
             />
           </div>
         </div>
-        <CategoryFilter activeCategories={activeCategories} onToggle={toggleCategory} />
+        <CategoryFilter
+          activeCategories={activeCategories}
+          onToggle={toggleCategory}
+          viewportRef={categoryFilterRef}
+        />
         <PostGrid posts={visiblePosts} />
       </section>
     </>
   );
 }
 
-function CategoryFilter({ activeCategories, onToggle }) {
+function CategoryFilter({ activeCategories, onToggle, viewportRef }) {
   return (
-    <div className="category-filter" aria-label="Filter posts by category">
+    <div className="category-filter" ref={viewportRef} aria-label="Filter posts by category">
       {categories.map((category) => {
         const selected = activeCategories.includes(category.id);
         return (

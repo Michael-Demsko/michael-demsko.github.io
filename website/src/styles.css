@@ -132,16 +132,28 @@ input {
 
 .photo-wrap {
   width: min(100%, 790px);
+  display: flex;
+  justify-content: center;
 }
 
-.photo-wrap img {
-  display: block;
-  width: 100%;
+.photo-frame {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
   max-height: min(72vh, 760px);
-  object-fit: contain;
+  padding: clamp(10px, 1.5vw, 18px);
+  background: var(--surface);
   border: clamp(8px, 1.6vw, 16px) solid var(--photo-color);
   box-shadow: var(--shadow);
-  background: #111;
+}
+
+.photo-frame img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(min(72vh, 760px) - clamp(36px, 6.2vw, 68px));
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
 .photo-caption {
@@ -177,6 +189,16 @@ input {
   margin-top: 26px;
   color: var(--photo-color);
   animation: pulse 2s infinite;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.scroll-cue.hidden {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: none;
+  pointer-events: none;
 }
 
 @keyframes pulse {
