@@ -1,11 +1,5 @@
 [
   {
-    "id": "000001680016",
-    "src": "/images/photo/daily/000001680016.jpg",
-    "title": "shoe collab",
-    "date": "2024-12-17"
-  },
-  {
     "id": "2026-06-14-30170023-f87e83",
     "src": "/images/photo/daily/2026-06-14-30170023-f87e83.jpg",
     "title": "roller limbo",
@@ -22,5 +16,11 @@
     "src": "/images/photo/daily/2026-06-13-26700024-c88c73.jpg",
     "title": "Winter's Rose Garden",
     "date": "2026-06-13"
+  },
+  {
+    "id": "000001680016",
+    "src": "/images/photo/daily/000001680016.jpg",
+    "title": "shoe collab",
+    "date": "2026-06-14"
   }
 ]
