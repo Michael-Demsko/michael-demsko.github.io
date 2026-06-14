@@ -475,15 +475,56 @@ function uniqueValues(values) {
 
 async function runWebsiteBuild() {
   const cwd = await getWebsiteRoot();
+  await ensureWebsiteDependencies(cwd);
+
   return new Promise((resolve, reject) => {
     execFile("npm", ["run", "build"], { cwd }, (error, stdout, stderr) => {
       if (error) {
-        reject(new Error(`${stderr || stdout || error.message}`.trim()));
+        reject(
+          new Error(
+            [
+              "The update was saved locally, but the site build failed.",
+              "Try clicking Publish to GitHub after the build dependency repair finishes, or run npm install from the repo root.",
+              compactCommandOutput(stderr || stdout || error.message),
+            ]
+              .filter(Boolean)
+              .join("\n\n"),
+          ),
+        );
         return;
       }
       resolve();
     });
   });
+}
+
+async function ensureWebsiteDependencies(cwd) {
+  const esbuildPackage = process.arch === "arm64" ? "@esbuild/darwin-arm64" : "@esbuild/darwin-x64";
+
+  try {
+    await fs.access(path.join(cwd, "..", "node_modules", ...esbuildPackage.split("/")));
+    return;
+  } catch {
+    // Missing native optional dependencies are repaired by npm install.
+  }
+
+  await new Promise((resolve, reject) => {
+    execFile("npm", ["install", "--workspaces", "--include=dev"], { cwd: path.dirname(cwd) }, (error, stdout, stderr) => {
+      if (error) {
+        reject(new Error(compactCommandOutput(stderr || stdout || error.message)));
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+function compactCommandOutput(value) {
+  const lines = String(value || "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  return lines.slice(-12).join("\n");
 }
 
 async function runGit(args, cwd) {
