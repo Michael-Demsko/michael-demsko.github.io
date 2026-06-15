@@ -329,9 +329,7 @@ function PostPage({ post }) {
         <h1>{post.title}</h1>
       </header>
       <div className="article-body">
-        {post.embedHtml && (
-          <div className="embed" dangerouslySetInnerHTML={{ __html: post.embedHtml }} />
-        )}
+        {post.embedHtml && <HtmlEmbed html={post.embedHtml} />}
         {(post.body || []).map((block, index) => {
           if (block.type === "heading") return <h2 key={index}>{block.text}</h2>;
           if (block.type === "paragraph") return <p key={index}>{block.text}</p>;
@@ -352,6 +350,33 @@ function PostPage({ post }) {
       </div>
     </article>
   );
+}
+
+function HtmlEmbed({ html }) {
+  const embedRef = useRef(null);
+
+  useEffect(() => {
+    const embed = embedRef.current;
+    if (!embed) return undefined;
+
+    embed.innerHTML = html;
+    const scripts = [...embed.querySelectorAll("script")];
+
+    for (const script of scripts) {
+      const replacement = document.createElement("script");
+      for (const attribute of script.attributes) {
+        replacement.setAttribute(attribute.name, attribute.value);
+      }
+      replacement.textContent = script.textContent;
+      script.replaceWith(replacement);
+    }
+
+    return () => {
+      embed.innerHTML = "";
+    };
+  }, [html]);
+
+  return <div className="embed" ref={embedRef} />;
 }
 
 function About() {

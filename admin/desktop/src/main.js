@@ -194,15 +194,19 @@ ipcMain.handle("posts:create", async (_event, payload) => {
   const posts = await readPosts();
   const slug = uniqueSlug(slugify(title), posts);
   const savedImages = [];
+  const plainTextValue = plainText.trim();
+  const iframeValue = iframe.trim();
+  const embedHtml = iframeValue || (looksLikeEmbedHtml(plainTextValue) ? plainTextValue : "");
+  const paragraphText = embedHtml === plainTextValue ? "" : plainTextValue;
 
   for (const imagePath of imagePaths) {
     savedImages.push(await savePostImage(imagePath, slug));
   }
 
   const body = [];
-  if (plainText.trim()) {
+  if (paragraphText) {
     body.push(
-      ...plainText
+      ...paragraphText
         .split(/\n{2,}/)
         .map((text) => text.trim())
         .filter(Boolean)
@@ -220,8 +224,8 @@ ipcMain.handle("posts:create", async (_event, payload) => {
     date,
     category,
     tags: splitTags(tags),
-    summary: summary.trim() || plainText.trim().slice(0, 160) || "New post.",
-    ...(iframe.trim() ? { embedHtml: iframe.trim() } : {}),
+    summary: summary.trim() || paragraphText.slice(0, 160) || "New post.",
+    ...(embedHtml ? { embedHtml } : {}),
     body,
   };
 
@@ -503,6 +507,10 @@ function splitTags(value) {
     .split(",")
     .map((tag) => tag.trim())
     .filter(Boolean);
+}
+
+function looksLikeEmbedHtml(value) {
+  return /<(iframe|script|div|blockquote|object|embed)\b/i.test(value);
 }
 
 function uniqueValues(values) {
