@@ -301,9 +301,11 @@ async function isWebsiteRoot(websiteRoot) {
   if (!websiteRoot) return false;
 
   try {
-    await fs.access(path.join(websiteRoot, "src/data/photos.json"));
-    await fs.access(path.join(websiteRoot, "src/data/posts.json"));
-    await fs.access(path.join(websiteRoot, "src/data/categories.json"));
+    await Promise.all([
+      readLocalText(path.join(websiteRoot, "src/data/photos.json")),
+      readLocalText(path.join(websiteRoot, "src/data/posts.json")),
+      readLocalText(path.join(websiteRoot, "src/data/categories.json")),
+    ]);
     return true;
   } catch {
     return false;
@@ -345,11 +347,45 @@ async function docsPath(...parts) {
 }
 
 async function readJson(filePath) {
-  return JSON.parse(await fs.readFile(filePath, "utf8"));
+  try {
+    return JSON.parse(await readLocalText(filePath));
+  } catch (error) {
+    if (isDatalessReadError(error)) {
+      throw new HttpError(
+        [
+          "The selected website folder contains macOS placeholder files that cannot be read.",
+          "Choose the fresh hydrated checkout, or right-click the repo folder in Finder and choose Download Now.",
+        ].join(" "),
+      );
+    }
+
+    throw error;
+  }
 }
 
 async function writeJson(filePath, value) {
   await fs.writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+async function readLocalText(filePath) {
+  try {
+    return await fs.readFile(filePath, "utf8");
+  } catch (error) {
+    if (isDatalessReadError(error)) {
+      throw new HttpError(
+        [
+          `${filePath} is present but not downloaded locally.`,
+          "Choose a hydrated checkout or download the folder in Finder before using the admin app.",
+        ].join(" "),
+      );
+    }
+
+    throw error;
+  }
+}
+
+function isDatalessReadError(error) {
+  return error?.errno === -81 || String(error?.message || "").includes("Unknown system error -81");
 }
 
 async function readPhotos() {
