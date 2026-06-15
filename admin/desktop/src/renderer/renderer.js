@@ -196,20 +196,28 @@ $("#preview-dialog").addEventListener("click", (event) => {
 async function loadAll() {
   if (!ensureDesktopApp()) return;
 
-  setRootStatus("Desktop bridge connected. Locating website folder...", true);
+  try {
+    setRootStatus("Desktop bridge connected. Locating website folder...", true);
 
-  const settings = await adminApi.getSettings();
-  setRootStatus(settings.valid ? settings.websiteRoot : `${settings.websiteRoot} is not valid`, settings.valid);
+    const settings = await adminApi.getSettings();
+    setRootStatus(settings.valid ? settings.websiteRoot : `${settings.websiteRoot} is not valid`, settings.valid);
 
-  const [photos, posts, categories] = await Promise.all([
-    adminApi.listPhotos(),
-    adminApi.listPosts(),
-    adminApi.listCategories(),
-  ]);
+    const [photos, posts, categories] = await Promise.all([
+      adminApi.listPhotos(),
+      adminApi.listPosts(),
+      adminApi.listCategories(),
+    ]);
 
-  renderPhotos(photos);
-  renderPosts(posts);
-  renderCategories(categories);
+    renderPhotos(photos);
+    renderPosts(posts);
+    renderCategories(categories);
+  } catch (error) {
+    setRootStatus(error.message, false);
+    setStatus("#photo-status", "Click Choose website folder and select the repo folder or its inner website folder.");
+    renderPhotos([]);
+    renderPosts([]);
+    renderCategories([]);
+  }
 }
 
 function renderCategories(categories) {

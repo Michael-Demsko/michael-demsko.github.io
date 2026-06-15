@@ -282,18 +282,24 @@ async function getWebsiteRoot() {
   }
 
   candidates.push(
-    defaultWebsiteRoot,
     await findWebsiteRootNear(process.resourcesPath || appRoot),
-    path.resolve(app.getAppPath(), "../../../website"),
     await findWebsiteRootNear(app.getAppPath()),
+    await findWebsiteRootNear(app.getPath("exe")),
     await findWebsiteRootNear(process.cwd()),
+    defaultWebsiteRoot,
+    path.resolve(app.getAppPath(), "../../../website"),
   );
 
   for (const candidate of uniqueValues(candidates)) {
     if (await isWebsiteRoot(candidate)) return candidate;
   }
 
-  return candidates[0] || defaultWebsiteRoot;
+  throw new HttpError(
+    [
+      "No valid website folder is selected.",
+      "Click Choose website folder and select the repo folder or its inner website folder.",
+    ].join(" "),
+  );
 }
 
 async function writeSettings(settings) {
@@ -330,7 +336,7 @@ async function findWebsiteRootNear(startPath) {
   if (!startPath) return "";
 
   let current = path.resolve(startPath);
-  for (let depth = 0; depth < 10; depth += 1) {
+  for (let depth = 0; depth < 18; depth += 1) {
     const candidate = path.join(current, "website");
     if (await isWebsiteRoot(candidate)) return candidate;
 
