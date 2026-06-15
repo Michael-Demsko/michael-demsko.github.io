@@ -1,5 +1,19 @@
 [
   {
+    "slug": "in-another-life-i-was-a-dancer",
+    "title": "In Another Life, I Was a Dancer",
+    "date": "2026-06-15",
+    "category": "writing",
+    "tags": [],
+    "summary": "Test Summary",
+    "body": [
+      {
+        "type": "paragraph",
+        "text": "<div class=\"substack-post-embed\"><p lang=\"en\">Aims & Aimlessness by Michael Demsko Jr</p><p>May 1st 2023</p><a data-post-link href=\"https://michaeldemskojr.substack.com/p/aims-and-aimlessness\">Read on Substack</a></div><script async src=\"https://substack.com/embedjs/embed.js\" charset=\"utf-8\"></script>"
+      }
+    ]
+  },
+  {
     "slug": "write-about-life-or-die",
     "title": "Write About Life, Or Die!",
     "date": "2024-10-25",
